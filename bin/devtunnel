@@ -1,6 +1,81 @@
 #!/usr/bin/env ruby
-
+#
 require 'devtunnel'
+require 'commander/import'
+require 'io/console'
 
-puts ARGV.inspect
+program :version, '0.0.1'
+program :description, 'Command-line interface for https://devtunnel.madebymarket.com file transfer service.'
+
+default_command :upload
+
+command :signup do |c|
+  c.syntax = 'devtunnel signup, [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.action do |args, options|
+		puts "Register for a free devtunnel account using your email address and a password."
+		email = ask "email address: " 
+		pw = password "choose password: "
+		pw_confirm = password "confirm password: "
+		account = Devtunnel::Account.signup email, pw, pw_confirm
+		if account.success?
+			account.write_creds
+			puts "Account created, saving your credentials to #{File.expand_path("~/.devtunnel_auth")}."
+			puts "Once you have confirmed your account, you can run 'devtunnel --file /your/file.pdf' to upload files."
+		else
+			puts account.errors
+		end
+  end
+end
+
+command :login do |c|
+  c.syntax = 'devtunnel login, [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.action do |args, options|
+		email = ask "Enter your email address: " 
+		pw = password "Enter your devtunnel password (will not be shown):"
+		account = Devtunnel::Account.login email, pw
+		if account.success?
+			account.write_creds
+			puts "Logged in, saving your credentials to #{File.expand_path("~/.devtunnel_auth")}"
+		else
+			puts account.errors
+		end
+  end
+end
+
+command :forward do |c|
+  c.syntax = 'devtunnel upload, [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.option '--file STRING', String, 'File to upload'
+  c.action do |args, options|
+		account = Devtunnel::Account.from_creds
+		unless options.file
+			puts "Syntax: devtunnel --file /your/file.pdf"
+			exit 0
+		end
+		Devtunnel.api_key = account.api_key
+	
+		puts "forwarding port. Other people can connect at: xyz"		
+
+  end
+end
+
+command :logout do |c|
+  c.syntax = 'devtunnel logout [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'description', 'command example'
+  c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+		Harborapp::Account.logout 
+		puts "You've been logged out successfully."
+  end
+end
 
