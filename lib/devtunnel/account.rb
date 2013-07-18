@@ -10,20 +10,19 @@ module Devtunnel
       Devtunnel::Api.request :post, "/login", params
     end
 
-    def self.signup(email, password, password_confirmation)
-      params = {:email => email, :password => password, 
-				:password_confirmation => password_confirmation}
+    def self.signup(email)
+      params = {:email => email}
       Devtunnel::Api.request :post, "/signup", params
     end
 
 		def write_creds
-			File.open(File.expand_path("~/.harbor_auth"), "w") do |f|
+			File.open(File.expand_path("~/.devtunnel_auth"), "w") do |f|
 				f.write({api_key: api_key, email: email}.to_json)
 			end
 		end
 
 		def self.from_creds
-			fn = File.expand_path("~/.harbor_auth")
+			fn = File.expand_path("~/.devtunnel_auth")
 			raise Exception.new("Please log in first") unless File.exist? fn
 			File.open(fn, "r") do |f|
 				hash = JSON.parse f.read
@@ -32,7 +31,7 @@ module Devtunnel
 		end
 	
 		def self.logout
-			fn = File.expand_path("~/.harbor_auth")
+			fn = File.expand_path("~/.devtunnel_auth")
 			File.unlink(fn) if File.exist? fn
 		end
   end

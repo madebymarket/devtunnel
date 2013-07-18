@@ -5,7 +5,7 @@ require 'commander/import'
 require 'io/console'
 
 program :version, '0.0.1'
-program :description, 'Command-line interface for https://devtunnel.madebymarket.com file transfer service.'
+program :description, 'Command-line interface for https://devtunnel.madebymarket.com.'
 
 default_command :upload
 
@@ -17,13 +17,11 @@ command :signup do |c|
   c.action do |args, options|
 		puts "Register for a free devtunnel account using your email address and a password."
 		email = ask "email address: " 
-		pw = password "choose password: "
-		pw_confirm = password "confirm password: "
-		account = Devtunnel::Account.signup email, pw, pw_confirm
+		account = Devtunnel::Account.signup email
 		if account.success?
 			account.write_creds
 			puts "Account created, saving your credentials to #{File.expand_path("~/.devtunnel_auth")}."
-			puts "Once you have confirmed your account, you can run 'devtunnel --file /your/file.pdf' to upload files."
+			puts "Once you have confirmed your account, you can run 'devtunnel forward --port 8080' to forward port 8080 through your devtunnel."
 		else
 			puts account.errors
 		end
@@ -74,7 +72,7 @@ command :logout do |c|
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
   c.action do |args, options|
-		Harborapp::Account.logout 
+		Devtunnel::Account.logout 
 		puts "You've been logged out successfully."
   end
 end
