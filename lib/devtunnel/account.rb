@@ -3,7 +3,7 @@ require_relative "api_model"
 module Devtunnel
   class Account
     include ApiModel
-    attr_accessor :api_key, :email
+    attr_accessor :api_key, :email, :user, :port
 
     def self.login(email, password)
       params = {:basic_username => email, :basic_password => password}
@@ -33,6 +33,11 @@ module Devtunnel
 		def self.logout
 			fn = File.expand_path("~/.devtunnel_auth")
 			File.unlink(fn) if File.exist? fn
+		end
+
+		def self.forward port
+      params = {:port => port}
+      Devtunnel::Api.request :post, "/forward", params
 		end
   end
 end

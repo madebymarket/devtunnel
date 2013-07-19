@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#
+
 require 'devtunnel'
 require 'commander/import'
 require 'io/console'
@@ -18,6 +18,7 @@ command :signup do |c|
 		puts "Register for a free devtunnel account using your email address and a password."
 		email = ask "email address: " 
 		account = Devtunnel::Account.signup email
+
 		if account.success?
 			account.write_creds
 			puts "Account created, saving your credentials to #{File.expand_path("~/.devtunnel_auth")}."
@@ -51,16 +52,20 @@ command :forward do |c|
   c.summary = ''
   c.description = ''
   c.example 'description', 'command example'
-  c.option '--file STRING', String, 'File to upload'
+  c.option '--port STRING', String, 'File to upload'
   c.action do |args, options|
 		account = Devtunnel::Account.from_creds
-		unless options.file
-			puts "Syntax: devtunnel --file /your/file.pdf"
+		unless options.port
+			puts "Syntax: devtunnel --port 8080"
 			exit 0
 		end
 		Devtunnel.api_key = account.api_key
-	
-		puts "forwarding port. Other people can connect at: xyz"		
+
+		fwd = Devtunnel::Account.forward options.port
+
+		puts "forwarding local port #{options.port} to https://devtunnel.madebymarket.com:#{fwd.port}"
+		puts "hit ctrl+c or close your terminal session to end forwarding."
+		`ssh -g -R #{fwd.port}:localhost:#{options.port} #{fwd.user}@devtunnel.madebymarket.com -p 2222 -N`	
 
   end
 end
