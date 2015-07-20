@@ -63,7 +63,7 @@ command :forward do |c|
 
 		fwd = Devtunnel::Account.forward options.port
 
-		puts "forwarding local port #{options.port} to https://devtunnel.madebymarket.com:#{fwd.port}"
+		puts "forwarding local port #{options.port} to http://devtunnel.madebymarket.com:#{fwd.port}"
 		puts "hit ctrl+c or close your terminal session to end forwarding."
 		`ssh -g -R #{fwd.port}:localhost:#{options.port} #{fwd.user}@devtunnel.madebymarket.com -p 2222 -N`	
 
