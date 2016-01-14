@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "devtunnel"
   spec.version       = Devtunnel::VERSION
   spec.authors       = ["Bryan Thompson"]
-  spec.email         = ["bryan@madebymarket.com"]
+  spec.email         = ["bryan@37chairs.com"]
   spec.description   = %q{Uses your DevTunnel account to quickly and easily tunnel a local dev port to the world.  Useful for pairing and sharing a local unicorn when behind a random NAT}
   spec.summary       = %q{How is this not the same as description?}
-  spec.homepage      = "http://devtunnel.labs.madebymarket.com"
+  spec.homepage      = "http://devtunnel.link"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
