@@ -4,8 +4,8 @@ require 'devtunnel'
 require 'commander/import'
 require 'io/console'
 
-program :version, '0.0.1'
-program :description, 'Command-line interface for http://devtunnel.link'
+program :version, '1.1.1'
+program :description, 'Command-line interface for https://devtunnel.link'
 
 default_command :upload
 
@@ -63,7 +63,7 @@ command :forward do |c|
 
 		fwd = Devtunnel::Account.forward options.port
 
-		puts "forwarding local port #{options.port} to http://devtunnel.link:#{fwd.port}"
+		puts "forwarding local port #{options.port} to https://devtunnel.link:#{fwd.port}"
 		puts "hit ctrl+c or close your terminal session to end forwarding."
 		`ssh -g -R #{fwd.port}:localhost:#{options.port} #{fwd.user}@devtunnel.link -p 2222 -N`	
 

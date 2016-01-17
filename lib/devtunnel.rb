@@ -8,7 +8,7 @@ require "json"
 
 module Devtunnel
 	@api_key = nil
-	@api_url = "http://devtunnel.link/api/v1"
+	@api_url = "https://devtunnel.link/api/v1"
 
 	def self.api_key=(api_key)
 		@api_key = api_key
